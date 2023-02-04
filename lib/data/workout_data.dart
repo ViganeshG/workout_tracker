@@ -3,11 +3,17 @@ import 'package:workout_tracker/models/exercise.dart';
 import 'package:workout_tracker/models/workout.dart';
 import 'package:provider/provider.dart';
 
-class WorkoutData extends ChangeNotifier {
-// Workout Data structure
+import 'hive_database.dart';
 
-// -this is overall list contains the different workouts
-// -Each workout has a name and list of exercises
+class WorkoutData extends ChangeNotifier {
+  final db = HiveDatabase();
+
+/* Workout Data structure
+
+ -this is overall list contains the different workouts
+ -Each workout has a name and list of exercises
+ */
+
   List<Workout> workoutList = [
     //default Workout
     Workout(
@@ -34,6 +40,17 @@ class WorkoutData extends ChangeNotifier {
     ),
   ];
 
+  //if there are workouts already in database, then get that workoutlist
+  void initalizeWorkoutList() {
+    if (db.previousDataExists()) {
+      workoutList = db.readFromDatabase();
+    }
+    // otherwise use default workouts
+    else {
+      db.saveToDatabase(workoutList);
+    }
+  }
+
   //get list of workout
   List<Workout> getWorkoutList() {
     return workoutList;
@@ -47,6 +64,8 @@ class WorkoutData extends ChangeNotifier {
       exercises: [],
     ));
     notifyListeners();
+    //save to database
+    db.saveToDatabase(workoutList);
   }
 
   //add an exercise to a workout
@@ -67,6 +86,8 @@ class WorkoutData extends ChangeNotifier {
       sets: sets,
     ));
     notifyListeners();
+    //save to database
+    db.saveToDatabase(workoutList);
   }
 
   //check off the exercise
@@ -79,6 +100,8 @@ class WorkoutData extends ChangeNotifier {
     relevantExercise.isCompleted = !relevantExercise.isCompleted;
 
     notifyListeners();
+    //save to database
+    db.saveToDatabase(workoutList);
   }
 
   //get length of a given workout
