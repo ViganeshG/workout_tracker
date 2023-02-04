@@ -10,7 +10,7 @@ class HiveDatabase {
   bool previousDataExists() {
     if (_myBox.isEmpty) {
       print("Previous data Not exists");
-      _myBox.put('Start_Date', todaysDateDDMMYYYY());
+      _myBox.put('START_DATE', todaysDateDDMMYYYY());
       return false;
     } else {
       print('Previous data exists');
@@ -20,7 +20,7 @@ class HiveDatabase {
 
   //return start date as ddmmyy
   String getStartDate() {
-    return _myBox.get('Start_Date');
+    return _myBox.get('START_DATE');
   }
 
   //write the data
@@ -41,7 +41,7 @@ class HiveDatabase {
     }
     //save into hive
     _myBox.put('WORKOUTS', workoutList);
-    _myBox.put('EXERCISE', exerciseList);
+    _myBox.put('EXERCISES', exerciseList);
   }
 
   //read the data and return the list of data
@@ -92,7 +92,7 @@ class HiveDatabase {
   //return completion of given data
   int getCompletionStatus(String ddmmyyyy) {
     //return 0 or 1, if null then return 0
-    int completionStatus = _myBox.get('COMPLETION_STATUS$ddmmyyyy') ?? 0;
+    int completionStatus = _myBox.get('COMPLETION_STATUS_$ddmmyyyy') ?? 0;
     return completionStatus;
   }
 }
